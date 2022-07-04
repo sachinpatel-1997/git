@@ -1,11 +1,19 @@
-import api from 'service/api';
+import api from "services/api";
 
 export function interceptor() {
-  const localToken = localStorage.getItem('token');
-  api.interceptors.request.use((config) => {
-    if (localToken) {
-      config.headers.Authorization = `JWT ${localToken}`;
-    }
-    return config;
+  
+  api.interceptors.request.use(
+    config => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = 'Bearer ' + token;
+        }
+        config.headers['Content-Type'] = 'application/json';
+        return config;
+    },
+    error => {
+        Promise.reject(error)
   });
 }
+
+
